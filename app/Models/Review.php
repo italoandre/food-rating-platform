@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Review extends Model
+/**
+ * @property integer $rating
+ */
+class Review extends BaseModel
 {
     /** @use HasFactory<\Database\Factories\ReviewFactory> */
     use HasFactory;
@@ -19,7 +22,8 @@ class Review extends Model
         'restaurant_id',
         'user_id',
         'title',
-        'description'
+        'description',
+        'rating',
     ];
     public $timestamps = true;
 
@@ -36,5 +40,26 @@ class Review extends Model
     public function reviewPhotos(): HasMany
     {
         return $this->hasMany(ReviewPhoto::class);
+    }
+
+    public function setRatingAttribute($value): void
+    {
+        $this->attributes['rating'] = ($value >= 1 && $value <= 5) ? $value : 0;
+    }
+
+    public function getRatingAttribute($value): int|null
+    {
+        return ($value >= 1 && $value <= 5) ? $value : null;
+    }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->external_id,
+            'rating' => $this->rating,
+            'title' => $this->title,
+            'description' => $this->description,
+            'photos' => $this->reviewPhotos()
+        ];
     }
 }
