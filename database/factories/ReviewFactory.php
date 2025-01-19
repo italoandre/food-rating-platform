@@ -24,6 +24,7 @@ class ReviewFactory extends Factory
             'user_id' => User::factory(),
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
+            'rating' => $this->faker->numberBetween(1, 5),
         ];
     }
 }

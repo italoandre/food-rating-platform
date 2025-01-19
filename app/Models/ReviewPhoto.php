@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ReviewPhoto extends Model
+class ReviewPhoto extends BaseModel
 {
     /** @use HasFactory<\Database\Factories\ReviewPhotoFactory> */
     use HasFactory;

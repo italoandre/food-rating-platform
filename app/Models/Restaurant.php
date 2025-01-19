@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Restaurant extends Model
+class Restaurant extends BaseModel
 {
     /** @use HasFactory<\Database\Factories\RestaurantFactory> */
     use HasFactory;
