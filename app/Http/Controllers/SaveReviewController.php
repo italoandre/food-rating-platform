@@ -24,10 +24,7 @@ class SaveReviewController extends Controller
             'photos.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        /**
-         * Temporary solution, as authentication is not yet set.
-         */
-        $user = auth()->user() ?? User::whereNull('deleted_at')->first();
+        $user = auth()->user();
 
         $restaurant = Restaurant::findByExternalId($restaurantId);
         if (!$restaurant) {
