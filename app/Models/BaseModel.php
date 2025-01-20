@@ -9,7 +9,7 @@ class BaseModel extends Model
 {
     public static function findByExternalId(string $id): ?BaseModel
     {
-        $query = self::where('external_id', $id)->first();
+        $query = self::where('external_id', $id);
         if (in_array(SoftDeletes::class, class_uses(self::class))) {
             $query->whereNull('deleted_at');
         }

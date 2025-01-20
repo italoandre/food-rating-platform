@@ -42,24 +42,54 @@ class SaveReviewController extends Controller
             'description' => $request->input('description'),
         ]);
 
-        if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $photo) {
-                $path = $photo->store('review-photos', 'public');
-                
-                $thumbnailPath = 'review-photos/thumb_' . basename($path);
-                $manager = new ImageManager(new Driver());
-                $thumbnail = $manager->read(Storage::disk('public')->path($path));
-                $thumbnail->cover(300, 300);
-                $thumbnail->save(Storage::disk('public')->path($thumbnailPath));
-                
-                $review->reviewPhotos()->create([
-                    'external_id' => Str::uuid()->toString(),
-                    'path' => $path,
-                    'thumbnail_path' => $thumbnailPath,
-                ]);
+        try {
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $photo) {
+                    $this->savePhoto($photo, $review);
+                }
             }
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error processing photos',
+                'error' => $e->getMessage()
+            ], 500);
         }
 
         return response()->json($review->toArray());
+    }
+
+    private function savePhoto($photo, $review): void
+    {
+        $path = $photo->store('review-photos', 'public');
+        if (!$path) {
+            throw new \RuntimeException('Failed to store photo');
+        }
+
+        try {
+            $thumbnailPath = $this->createThumbnail($path);
+            
+            $review->reviewPhotos()->create([
+                'external_id' => Str::uuid()->toString(),
+                'path' => $path,
+                'thumbnail_path' => $thumbnailPath,
+            ]);
+        } catch (\Exception $e) {
+            Storage::disk('public')->delete($path);
+            throw $e;
+        }
+    }
+
+    private function createThumbnail(string $originalPath): string
+    {
+        $thumbnailPath = 'review-photos/thumb_' . basename($originalPath);
+        $manager = new ImageManager(new Driver());
+        $thumbnail = $manager->read(Storage::disk('public')->path($originalPath));
+        $thumbnail->cover(300, 300);
+        
+        if (!$thumbnail->save(Storage::disk('public')->path($thumbnailPath))) {
+            throw new \RuntimeException('Failed to save thumbnail');
+        }
+
+        return $thumbnailPath;
     }
 }

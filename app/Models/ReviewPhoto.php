@@ -30,14 +30,19 @@ class ReviewPhoto extends BaseModel
 
     public function getUrlAttribute(): string
     {
+        if (!Storage::disk('public')->exists($this->path)) {
+            return '';
+        }
+        
         return url(Storage::disk('public')->url($this->path));
     }
 
     public function getThumbnailUrlAttribute(): string
     {
-        return $this->thumbnail_path 
-            ? url(Storage::disk('public')->url($this->thumbnail_path))
-            : $this->url;
+        if ($this->thumbnail_path && Storage::disk('public')->exists($this->thumbnail_path)) {
+            return url(Storage::disk('public')->url($this->thumbnail_path));
+        }
+        return $this->url;
     }
 
     public function toArray(): array

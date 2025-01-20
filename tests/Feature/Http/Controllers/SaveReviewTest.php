@@ -17,7 +17,7 @@ class SaveReviewTest extends TestCase
     private array $invalidRating = [-1, 0, 6, 10, 'abc'];
     private User $validUser;
 
-    private function getRandomRating(array $ratings): int
+    private function getRandomRating(array $ratings): int|string
     {
         return $ratings[array_rand($ratings)];
     }
