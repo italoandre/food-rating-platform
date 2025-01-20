@@ -17,6 +17,7 @@ class SaveReviewController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'photos' => 'nullable|array',
+            'photos.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         /**
@@ -36,6 +37,16 @@ class SaveReviewController extends Controller
             'title' => $request->input('title'),
             'description' => $request->input('description'),
         ]);
+
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                $path = $photo->store('review-photos', 'public');
+                $review->reviewPhotos()->create([
+                    'external_id' => Str::uuid()->toString(),
+                    'path' => $path,
+                ]);
+            }
+        }
 
         return response()->json($review->toArray());
     }

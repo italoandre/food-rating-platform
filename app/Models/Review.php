@@ -59,7 +59,7 @@ class Review extends BaseModel
             'rating' => $this->rating,
             'title' => $this->title,
             'description' => $this->description,
-            'photos' => $this->reviewPhotos()
+            'photos' => $this->reviewPhotos
         ];
     }
 }
