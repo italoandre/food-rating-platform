@@ -22,7 +22,7 @@ class SaveReviewTest extends TestCase
         return $ratings[array_rand($ratings)];
     }
 
-    #[Test] public function review_is_saved_if_valid_data_without_photos_is_submitted()
+    #[Test] public function review_is_saved_if_valid_data_and_no_photos_are_submitted()
     {
         $restaurant = Restaurant::factory()->createOne();
         $data = [
@@ -56,7 +56,7 @@ class SaveReviewTest extends TestCase
     }
 
     #[Test]
-    public function review_is_saved_if_valid_data_with_photos_is_submitted()
+    public function review_is_saved_if_valid_data_with_photos_are_submitted()
     {
         $restaurant = Restaurant::factory()->createOne();
 
@@ -102,6 +102,8 @@ class SaveReviewTest extends TestCase
 
         foreach ($content['photos'] as $photo) {
             Storage::disk('public')->assertExists($photo['path']);
+            Storage::disk('public')->assertExists($photo['thumbnail_path']);
+            $this->assertStringStartsWith('review-photos/thumb_', $photo['thumbnail_path']);
         }
 
         @unlink($tempFile1);

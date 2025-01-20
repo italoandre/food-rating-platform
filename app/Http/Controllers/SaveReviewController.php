@@ -7,6 +7,10 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class SaveReviewController extends Controller
 {
@@ -41,9 +45,17 @@ class SaveReviewController extends Controller
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $photo) {
                 $path = $photo->store('review-photos', 'public');
+                
+                $thumbnailPath = 'review-photos/thumb_' . basename($path);
+                $manager = new ImageManager(new Driver());
+                $thumbnail = $manager->read(Storage::disk('public')->path($path));
+                $thumbnail->cover(300, 300);
+                $thumbnail->save(Storage::disk('public')->path($thumbnailPath));
+                
                 $review->reviewPhotos()->create([
                     'external_id' => Str::uuid()->toString(),
                     'path' => $path,
+                    'thumbnail_path' => $thumbnailPath,
                 ]);
             }
         }

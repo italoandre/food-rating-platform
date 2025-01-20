@@ -18,7 +18,10 @@ class ReviewPhoto extends BaseModel
         'external_id',
         'review_id',
         'path',
+        'thumbnail_path',
     ];
+
+    protected $appends = ['url', 'thumbnail_url'];
 
     public function review(): BelongsTo
     {
@@ -30,12 +33,21 @@ class ReviewPhoto extends BaseModel
         return url(Storage::disk('public')->url($this->path));
     }
 
+    public function getThumbnailUrlAttribute(): string
+    {
+        return $this->thumbnail_path 
+            ? url(Storage::disk('public')->url($this->thumbnail_path))
+            : $this->url;
+    }
+
     public function toArray(): array
     {
         return [
             'id' => $this->external_id,
             'path' => $this->path,
-            'url' => $this->url
+            'url' => $this->url,
+            'thumbnail_path' => $this->thumbnail_path,
+            'thumbnail_url' => $this->thumbnail_url,
         ];
     }
 }
