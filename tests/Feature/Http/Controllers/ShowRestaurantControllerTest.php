@@ -19,7 +19,7 @@ class ShowRestaurantControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->user = User::factory()->create();
         $this->token = auth()->login($this->user);
     }
@@ -29,7 +29,7 @@ class ShowRestaurantControllerTest extends TestCase
     {
         $restaurant = Restaurant::factory()->create();
         $user = User::factory()->create();
-        
+
         Review::factory(2)->create([
             'restaurant_id' => $restaurant->id,
             'user_id' => $user->id
@@ -41,19 +41,19 @@ class ShowRestaurantControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'external_id' => $restaurant->external_id,
+                'id' => $restaurant->external_id,
                 'name' => $restaurant->name,
                 'slug' => $restaurant->slug,
                 'address' => $restaurant->address,
             ])
             ->assertJsonStructure([
-                'external_id',
+                'id',
                 'name',
                 'slug',
                 'address',
                 'reviews' => [
                     '*' => [
-                        'external_id',
+                        'id',
                         'rating',
                         'title',
                         'description',
@@ -61,7 +61,7 @@ class ShowRestaurantControllerTest extends TestCase
                             'id',
                             'name'
                         ],
-                        'review_photos'
+                        'photos'
                     ]
                 ]
             ]);
@@ -85,9 +85,9 @@ class ShowRestaurantControllerTest extends TestCase
         $this->app->get('auth')->forgetGuards();
 
         $restaurant = Restaurant::factory()->create();
-        
+
         $response = $this->getJson("/api/restaurants/{$restaurant->external_id}");
 
         $response->assertStatus(401);
     }
-} 
+}

@@ -18,7 +18,7 @@ class ListRestaurantsControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->user = User::factory()->create();
         $this->token = auth()->login($this->user);
     }
@@ -36,7 +36,7 @@ class ListRestaurantsControllerTest extends TestCase
             ->assertJsonCount(3)
             ->assertJsonStructure([
                 '*' => [
-                    'external_id',
+                    'id',
                     'name',
                     'slug',
                     'address'
@@ -66,4 +66,4 @@ class ListRestaurantsControllerTest extends TestCase
 
         $response->assertStatus(401);
     }
-} 
+}

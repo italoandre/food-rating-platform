@@ -12,8 +12,9 @@ class ListRestaurantsController extends Controller
         $restaurants = Restaurant::query()
             ->select(['external_id', 'name', 'slug', 'address'])
             ->orderBy('name')
-            ->get();
+            ->get()
+            ->map(fn (Restaurant $restaurant) => $restaurant->toSoftArray());
 
         return response()->json($restaurants);
     }
-}
+} 

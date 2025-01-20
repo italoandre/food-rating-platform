@@ -21,4 +21,24 @@ class Restaurant extends BaseModel
         return $this->hasMany(Review::class);
     }
 
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->external_id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'address' => $this->address,
+            'reviews' => $this->reviews
+        ];
+    }
+
+    public function toSoftArray(): array
+    {
+        return [
+            'id' => $this->external_id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'address' => $this->address,
+        ];
+    }
 }
