@@ -1,7 +1,5 @@
 # About this project
 
-Hi! I am Italo, and I am glad to take part on this assessment.
-
 ## Requirements
 
 - The library `tymon/jwt-auth` was used to create JWT tokens.
@@ -35,4 +33,4 @@ As backend is my focus (going deeper in frontend is on my roadmap), I try to tes
 
 ## Frontend
 
-I decided to keep the frontend code in another repository, to keep both repositories cleaner and easier to navigate. As I was told the most important would be to use Laravel and that I could use something other than Vue in the frontend, I decided to use React, which I am a bit more familiar with. [Visit the frontend repository](https://github.com/italoandre/curotech-food-rating-front).
+I decided to keep the frontend code in another repository, to keep both repositories cleaner and easier to navigate. As I was told the most important would be to use Laravel and that I could use something other than Vue in the frontend, I decided to use React, which I am a bit more familiar with. [Visit the frontend repository](https://github.com/italoandre/food-rating-platform-front).
